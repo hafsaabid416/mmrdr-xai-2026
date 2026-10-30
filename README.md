@@ -153,7 +153,7 @@ Representative outputs from the project are included in the [`examples/`](exampl
 
 | Output | Description |
 |---|---|
-| [Grade Distribution](examples/grade_distribution.png) | Distribution of DR severity grades, highlighting class imbalance (Report Figure 3). |
+| [Grade Distribution](examples/01_grade_distribution.png) | Distribution of DR severity grades, highlighting class imbalance (Report Figure 3). |
 | [Lesion Prevalence](examples/lesion_prevalence.png) | Prevalence of annotated retinal lesions across DR grades (Report Figure 4). |
 | [Confusion Matrix](examples/confusion_matrix.png) | Model C's predictions against true DR grades on the held-out test set (Report Figure 6). |
 | [Per-Grade Performance](examples/per_grade_performance.png) | Precision, recall and F1-score across DR severity grades (Report Figure 7). |
