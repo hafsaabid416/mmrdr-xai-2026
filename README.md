@@ -196,7 +196,6 @@ Additional representative outputs available in the run structure include:
 
 To **generate these files yourself**, prepare the MMRDR-CFP dataset, train the relevant model with Section 5, and run the evaluation/explanation/robustness/intervention commands in Sections 6–7. The Drive folders are for viewing the supplied outputs; reproducibility still depends on the scripts, configs and dataset access.
 
-**Access and privacy:** Before submission, open both Drive links in a signed-out/incognito browser and ensure assessors have Viewer access. Do not publicly expose patient-identifiable or restricted retinal images, raw dataset archives, secrets or credentials. Share any image panels only where permitted by the dataset's licence or terms.
 
 ## 9. Results to verify
 
@@ -222,4 +221,4 @@ Model C: Grade ≥2 sensitivity 0.877, Grade ≥3 sensitivity 0.953; test calibr
 - Synthetic image degradation does not replace validation on real clinical devices.
 - The work is a research prototype, **not a validated medical device**.
 
-For the experiment rationale, consult [`docs/DECISIONS.md`](docs/DECISIONS.md). For users of the Colab workflow, see [`notebooks/mmrdr_colab_runner.ipynb`](notebooks/mmrdr_colab_runner.ipynb).
+For users of the Colab workflow, see [`notebooks/mmrdr_colab_runner.ipynb`](notebooks/mmrdr_colab_runner.ipynb).
