@@ -1,0 +1,3 @@
+# C: B + 7-lesion auxiliary head (A4) — expected main model
+base: B_ordinal.yaml
+model: {lesion_head: true}

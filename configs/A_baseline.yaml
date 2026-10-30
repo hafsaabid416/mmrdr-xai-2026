@@ -1,0 +1,2 @@
+# A: ResNet-50 + softmax — baseline comparable to Tang et al. 2026 (A1)
+base: base.yaml

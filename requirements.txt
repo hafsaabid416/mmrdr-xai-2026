@@ -1,0 +1,11 @@
+# Tested on Google Colab (T4, Python 3.12). Exact versions are logged in each run's train.log.
+torch>=2.2
+torchvision>=0.17
+numpy>=1.26
+pandas>=2.1
+opencv-python-headless>=4.9
+scikit-learn>=1.4
+scipy>=1.11
+matplotlib>=3.8
+pyyaml>=6.0
+pytest>=8.0

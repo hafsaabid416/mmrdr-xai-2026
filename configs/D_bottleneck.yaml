@@ -1,0 +1,4 @@
+# D: grade predicted only from the 7 lesion probabilities (concept bottleneck, A5)
+base: C_multitask.yaml
+model: {bottleneck: true}
+loss: {lesion_weight: 1.0}

@@ -1,0 +1,4 @@
+# B: A + ordinal CORN head (A3). Median of predictive distribution as decision rule.
+base: base.yaml
+model: {grade_head: corn}
+eval: {decision: median}

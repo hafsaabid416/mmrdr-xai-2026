@@ -1,0 +1,39 @@
+{
+  "counts": {
+    "train": 7507,
+    "val": 1252,
+    "test": 2225
+  },
+  "grade_by_split": {
+    "train": {
+      "0": 4400,
+      "1": 888,
+      "2": 1326,
+      "3": 431,
+      "4": 462
+    },
+    "val": {
+      "0": 734,
+      "1": 148,
+      "2": 221,
+      "3": 72,
+      "4": 77
+    },
+    "test": {
+      "0": 1323,
+      "1": 259,
+      "2": 409,
+      "3": 100,
+      "4": 134
+    }
+  },
+  "excluded": {
+    "redundant copy within training": 76,
+    "duplicate of a test image": 52,
+    "duplicate group with conflicting grades": 6
+  },
+  "test_images_with_train_copy_removed": 46,
+  "test_images_duplicated_within_test": 10,
+  "val_fraction_of_pool": 0.1429,
+  "seed": 42
+}

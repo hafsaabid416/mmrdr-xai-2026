@@ -1,0 +1,3 @@
+# P3 ablation: Graham local-mean normalisation
+base: A_baseline.yaml
+data: {normaliser: graham}

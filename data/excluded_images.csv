@@ -1,0 +1,135 @@
+image,split,grade,dup_group,reason
+img/tr000075.jpg,train,0,9916,duplicate of a test image
+img/tr000506.jpg,train,0,505,duplicate of a test image
+img/tr000586.jpg,train,0,585,duplicate of a test image
+img/tr000649.jpg,train,2,11040,duplicate of a test image
+img/tr000824.jpg,train,0,823,duplicate of a test image
+img/tr000853.jpg,train,0,10949,duplicate of a test image
+img/tr000965.jpg,train,0,964,duplicate of a test image
+img/tr001420.jpg,train,0,1419,duplicate of a test image
+img/tr001980.jpg,train,1,10007,duplicate of a test image
+img/tr002041.jpg,train,0,2040,duplicate of a test image
+img/tr002067.jpg,train,0,2066,duplicate of a test image
+img/tr002086.jpg,train,0,2085,duplicate of a test image
+img/tr002169.jpg,train,0,2168,duplicate of a test image
+img/tr002240.jpg,train,0,2239,duplicate of a test image
+img/tr002410.jpg,train,0,2409,duplicate of a test image
+img/tr002492.jpg,train,0,8692,duplicate of a test image
+img/tr002676.jpg,train,0,2675,duplicate of a test image
+img/tr002988.jpg,train,0,2987,duplicate of a test image
+img/tr003007.jpg,train,0,3583,duplicate of a test image
+img/tr003027.jpg,train,0,3026,duplicate of a test image
+img/tr003156.jpg,train,1,10436,duplicate of a test image
+img/tr003195.jpg,train,1,10920,duplicate of a test image
+img/tr003255.jpg,train,0,9557,duplicate of a test image
+img/tr003401.jpg,train,0,3400,duplicate of a test image
+img/tr003584.jpg,train,0,3583,duplicate of a test image
+img/tr003693.jpg,train,0,9037,duplicate of a test image
+img/tr004142.jpg,train,2,9572,duplicate of a test image
+img/tr004260.jpg,train,0,4259,duplicate of a test image
+img/tr004344.jpg,train,0,4343,duplicate of a test image
+img/tr004360.jpg,train,0,4359,duplicate of a test image
+img/tr004367.jpg,train,0,4366,duplicate of a test image
+img/tr004949.jpg,train,0,4948,duplicate of a test image
+img/tr004951.jpg,train,0,4950,duplicate of a test image
+img/tr005346.jpg,train,0,5345,duplicate of a test image
+img/tr005459.jpg,train,0,3583,duplicate of a test image
+img/tr005463.jpg,train,0,5462,duplicate of a test image
+img/tr005488.jpg,train,0,5487,duplicate of a test image
+img/tr005930.jpg,train,0,7974,duplicate of a test image
+img/tr006147.jpg,train,0,10596,duplicate of a test image
+img/tr006811.jpg,train,0,6810,duplicate of a test image
+img/tr006858.jpg,train,0,6857,duplicate of a test image
+img/tr006860.jpg,train,4,10368,duplicate of a test image
+img/tr007024.jpg,train,0,7023,duplicate of a test image
+img/tr007399.jpg,train,0,2409,duplicate of a test image
+img/tr007455.jpg,train,0,9571,duplicate of a test image
+img/tr007717.jpg,train,0,7916,duplicate of a test image
+img/tr007917.jpg,train,0,7916,duplicate of a test image
+img/tr007975.jpg,train,0,7974,duplicate of a test image
+img/tr008348.jpg,train,0,2409,duplicate of a test image
+img/tr008482.jpg,train,0,8481,duplicate of a test image
+img/tr008582.jpg,train,0,8581,duplicate of a test image
+img/tr008693.jpg,train,0,8692,duplicate of a test image
+img/tr000783.jpg,train,1,6213,duplicate group with conflicting grades
+img/tr003992.jpg,train,4,4039,duplicate group with conflicting grades
+img/tr004040.jpg,train,2,4039,duplicate group with conflicting grades
+img/tr004076.jpg,train,0,7759,duplicate group with conflicting grades
+img/tr006214.jpg,train,0,6213,duplicate group with conflicting grades
+img/tr007760.jpg,train,1,7759,duplicate group with conflicting grades
+img/tr000809.jpg,train,0,493,redundant copy within training
+img/tr001445.jpg,train,0,269,redundant copy within training
+img/tr001907.jpg,train,0,753,redundant copy within training
+img/tr002328.jpg,train,0,1694,redundant copy within training
+img/tr002506.jpg,train,0,1358,redundant copy within training
+img/tr002555.jpg,train,0,464,redundant copy within training
+img/tr003164.jpg,train,0,1011,redundant copy within training
+img/tr003205.jpg,train,0,3158,redundant copy within training
+img/tr003235.jpg,train,0,1800,redundant copy within training
+img/tr003411.jpg,train,0,3410,redundant copy within training
+img/tr003482.jpg,train,0,3481,redundant copy within training
+img/tr003590.jpg,train,0,2931,redundant copy within training
+img/tr003902.jpg,train,0,1753,redundant copy within training
+img/tr003988.jpg,train,0,1388,redundant copy within training
+img/tr004027.jpg,train,0,2933,redundant copy within training
+img/tr004220.jpg,train,0,4219,redundant copy within training
+img/tr004410.jpg,train,0,864,redundant copy within training
+img/tr004424.jpg,train,0,1594,redundant copy within training
+img/tr004427.jpg,train,0,4001,redundant copy within training
+img/tr004485.jpg,train,0,4484,redundant copy within training
+img/tr004521.jpg,train,0,3687,redundant copy within training
+img/tr004529.jpg,train,0,4528,redundant copy within training
+img/tr004586.jpg,train,0,4585,redundant copy within training
+img/tr004826.jpg,train,0,3631,redundant copy within training
+img/tr004852.jpg,train,0,518,redundant copy within training
+img/tr005015.jpg,train,0,3361,redundant copy within training
+img/tr005040.jpg,train,0,438,redundant copy within training
+img/tr005046.jpg,train,0,1032,redundant copy within training
+img/tr005376.jpg,train,0,5375,redundant copy within training
+img/tr005519.jpg,train,0,1260,redundant copy within training
+img/tr005592.jpg,train,0,3749,redundant copy within training
+img/tr005911.jpg,train,0,1154,redundant copy within training
+img/tr005920.jpg,train,0,5069,redundant copy within training
+img/tr006070.jpg,train,0,1816,redundant copy within training
+img/tr006140.jpg,train,0,2301,redundant copy within training
+img/tr006413.jpg,train,0,5683,redundant copy within training
+img/tr006473.jpg,train,0,5766,redundant copy within training
+img/tr006546.jpg,train,0,2227,redundant copy within training
+img/tr006549.jpg,train,0,5193,redundant copy within training
+img/tr006550.jpg,train,0,6549,redundant copy within training
+img/tr006630.jpg,train,0,3271,redundant copy within training
+img/tr006698.jpg,train,0,6697,redundant copy within training
+img/tr006721.jpg,train,0,6192,redundant copy within training
+img/tr006973.jpg,train,0,5280,redundant copy within training
+img/tr007036.jpg,train,0,7035,redundant copy within training
+img/tr007071.jpg,train,0,2725,redundant copy within training
+img/tr007143.jpg,train,0,5666,redundant copy within training
+img/tr007308.jpg,train,0,843,redundant copy within training
+img/tr007315.jpg,train,0,6333,redundant copy within training
+img/tr007332.jpg,train,0,7331,redundant copy within training
+img/tr007379.jpg,train,0,3061,redundant copy within training
+img/tr007386.jpg,train,0,7385,redundant copy within training
+img/tr007437.jpg,train,0,1155,redundant copy within training
+img/tr007452.jpg,train,0,7157,redundant copy within training
+img/tr007488.jpg,train,0,558,redundant copy within training
+img/tr007535.jpg,train,0,5004,redundant copy within training
+img/tr007628.jpg,train,0,4744,redundant copy within training
+img/tr007661.jpg,train,1,7660,redundant copy within training
+img/tr007772.jpg,train,0,4897,redundant copy within training
+img/tr007811.jpg,train,0,7810,redundant copy within training
+img/tr007822.jpg,train,0,2206,redundant copy within training
+img/tr007916.jpg,train,0,2500,redundant copy within training
+img/tr007966.jpg,train,0,5381,redundant copy within training
+img/tr007987.jpg,train,0,3526,redundant copy within training
+img/tr007994.jpg,train,1,7993,redundant copy within training
+img/tr008027.jpg,train,0,7527,redundant copy within training
+img/tr008251.jpg,train,0,6817,redundant copy within training
+img/tr008263.jpg,train,0,3690,redundant copy within training
+img/tr008291.jpg,train,0,7959,redundant copy within training
+img/tr008315.jpg,train,0,8314,redundant copy within training
+img/tr008368.jpg,train,0,2301,redundant copy within training
+img/tr008653.jpg,train,0,1680,redundant copy within training
+img/tr008725.jpg,train,0,844,redundant copy within training
+img/tr008809.jpg,train,0,4513,redundant copy within training
+img/tr008844.jpg,train,0,6874,redundant copy within training
+img/tr008884.jpg,train,0,8883,redundant copy within training

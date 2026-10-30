@@ -1,0 +1,37 @@
+# Shared settings. Each experiment config inherits this via `base: base.yaml`.
+seed: 42
+data:
+  image_size: 512          # P2
+  normaliser: none         # P3: none | graham | clahe — chosen by validation ablation (A_* runs)
+augment:                   # P4–P6
+  brightness: 0.2
+  gamma: 0.2
+  p_blur: 0.3              # P5: decorrelates sharpness from grade (EDA §5, rho = -0.23)
+  max_blur_sigma: 1.5
+  p_jpeg: 0.3
+  scale: 0.05
+model:
+  backbone: resnet50       # A1/A2
+  pretrained: true
+  dropout: 0.2
+  grade_head: softmax
+  lesion_head: false
+  bottleneck: false
+loss:
+  lesion_weight: 0.5
+train:
+  epochs: 20
+  batch_size: 32
+  num_workers: 2
+  lr_backbone: 1.0e-4
+  lr_head: 1.0e-3
+  weight_decay: 1.0e-4
+  warmup_epochs: 1
+  grad_clip: 5.0
+  patience: 6
+  class_weighting: true    # T1
+  cb_beta: 0.999
+  balanced_sampler: false
+  max_lesion_pos_weight: 10
+eval:
+  decision: argmax
