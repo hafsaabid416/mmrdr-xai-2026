@@ -18,7 +18,7 @@ This README documents the code in this repository. Details of design decisions a
 | `tests/test_core.py` | Basic implementation tests |
 | `docs/DECISIONS.md` | Experiment rationale and sources |
 
-**Not included in this ZIP:** the licensed MMRDR images, preprocessed image cache, trained `.pt` checkpoints, full run histories or explanation plots. Code for generating these outputs is included. Without trained checkpoints, testing a new retinal image requires running training first. If distributing checkpoints separately, document their download location and associated configuration before claiming a no-training test path.
+**Not included in the repository ZIP examined:** the MMRDR images, preprocessed image cache, trained `.pt` checkpoints or full output folders. The Google Drive links below are supplied for inspecting the exported outputs; the scripts can regenerate them. Without trained checkpoints, testing a new retinal image requires running training first. Drive folder contents and sharing permissions must be checked by the repository owner.
 
 ## 2. Dataset
 
@@ -148,7 +148,57 @@ python scripts/intervention.py \
 
 These interventions substitute recorded dataset lesion annotations for predicted lesions. They are **not actual clinician edits** and were explored using test results; their effectiveness requires independent confirmation.
 
-## 8. Results to verify
+## 8. Example outputs, figures and evaluation results
+
+**These are the supporting outputs referenced by the technical report (Deliverable A).** They are hosted separately to keep the GitHub repository focused on code and documentation.
+
+- **[EDA figures and analysis outputs — Google Drive](https://drive.google.com/drive/folders/1skEM_hCVv6GvyY1-4FCRn6BZzvScq2r5?usp=drive_link)** — exploratory plots, dataset distributions, annotation analysis and other outputs from [`notebooks/mmrdr_eda.ipynb`](notebooks/mmrdr_eda.ipynb).
+- **[Experiment runs and outputs — Google Drive](https://drive.google.com/drive/folders/15yfpIAE6DBfVhwe6JDdf_VwlFtatWmWa?usp=drive_link)** — training/evaluation runs, predictions, Grad-CAM explanations, robustness checks and simulated lesion corrections. Output subpaths below are relative to the **runs folder**, not to the GitHub repository.
+
+### Where to find each figure from the report
+
+| Report item | Where to look | Recreate / source |
+|---|---|---|
+| **Figure 1 — Five DR grades** | Report-only explanatory infographic; not a model output | See the PDF report; based on the ICDR scale |
+| **Figure 2 — Sample fundus images** | EDA Drive folder / [`notebooks/mmrdr_eda.ipynb`](notebooks/mmrdr_eda.ipynb) | Sample images from the original MMRDR-CFP dataset; access and redistribution depend on dataset permissions |
+| **Figure 3 — Original grade distributions** | **EDA Drive folder** | Grade counts from the original MMRDR train/test partitions; regenerate through the EDA notebook |
+| **Figure 4 — Lesion prevalence heatmap** | **EDA Drive folder** | Lesion indicators grouped by DR grade; regenerate through the EDA notebook |
+| **Figure 5 — Architecture comparison** | Report-only explanatory diagram; not a script-generated metric plot | Model definitions in `src/mmrdr/models.py` and configuration files in `configs/` |
+| **Figure 6 — Model C confusion matrix** | **Runs Drive:** `C_multitask_none/eval/confusion_matrix.png` | `scripts/evaluate.py` |
+| **Figure 7 — Model C per-grade precision, recall and F1** | **Runs Drive:** check Model C evaluation outputs, particularly `C_multitask_none/eval/test_metrics.json` | Per-class metrics via `scripts/evaluate.py`; the report's bar-chart PNG is not confirmed as a standalone file in the verification archive |
+| **Figure 8 — Severe case misgraded Mild; prediction and explanation** | **Runs Drive:** `C_multitask_none/explain/panel_missed_sight_threatening.png` | `scripts/explain.py` |
+| **Figure 9 — Grad-CAM example gallery** | **Runs Drive:** `C_multitask_none/explain/gallery.png` | `scripts/explain.py` |
+| **Table 2 — Model comparison** | **Runs Drive:** `test_summary.csv`; each `*/eval/test_metrics.json` | `scripts/evaluate.py` run for Models A–D |
+| **Table 3 — Reliability checks** | **Runs Drive:** `C_multitask_none/eval/test_metrics.json`, `C_multitask_none/robustness/robustness.json`, `C_multitask_none/robustness/robustness.png` | `scripts/evaluate.py` and `scripts/robustness.py` |
+| **Table 4 — Simulated lesion corrections** | **Runs Drive:** `D_bottleneck_none/intervention/intervention.json`, `intervention.csv`, `intervention_curve.png` | `scripts/intervention.py` |
+
+Additional representative outputs available in the run structure include:
+
+```text
+<runs-folder>/
+  test_summary.csv
+  A_baseline/eval/test_metrics.json
+  B_ordinal_none/eval/test_metrics.json
+  C_multitask_none/
+    eval/test_predictions.csv
+    eval/confusion_matrix.png
+    explain/gallery.png
+    explain/panel_missed_sight_threatening.png
+    explain/panel_inconsistency_flag.png
+    explain/sanity_check.json
+    robustness/robustness.png
+    robustness/robustness.json
+  D_bottleneck_none/
+    intervention/intervention.csv
+    intervention/intervention.json
+    intervention/intervention_curve.png
+```
+
+To **generate these files yourself**, prepare the MMRDR-CFP dataset, train the relevant model with Section 5, and run the evaluation/explanation/robustness/intervention commands in Sections 6–7. The Drive folders are for viewing the supplied outputs; reproducibility still depends on the scripts, configs and dataset access.
+
+**Access and privacy:** Before submission, open both Drive links in a signed-out/incognito browser and ensure assessors have Viewer access. Do not publicly expose patient-identifiable or restricted retinal images, raw dataset archives, secrets or credentials. Share any image panels only where permitted by the dataset's licence or terms.
+
+## 9. Results to verify
 
 Reported held-out performance (2,225 test images):
 
@@ -161,9 +211,9 @@ Reported held-out performance (2,225 test images):
 
 Model C: Grade ≥2 sensitivity 0.877, Grade ≥3 sensitivity 0.953; test calibration error 0.137 before and 0.022 after temperature scaling. Model D exploratory correction of the three most uncertain lesion predictions: QWK 0.879 to 0.956, Grade ≥2 threshold misses 67 to 14, and Grade ≥3 threshold misses 23 to 61. See the technical report for confidence intervals, grading errors, explanations and limitations.
 
-**Outputs are not bundled in the uploaded GitHub ZIP.** Regenerate them with Sections 5–7 or supply a separately authorised verification archive. Do not claim the results can be reproduced without training unless the corresponding checkpoints have been provided.
+**Outputs are linked above via Google Drive rather than bundled in the examined GitHub ZIP.** Regenerate them with Sections 5–7 if needed. Do not claim the results can be reproduced without training unless the corresponding checkpoints have been provided.
 
-## 9. Reproducibility and limitations
+## 10. Reproducibility and limitations
 
 - Frozen image-level train/validation/test split, stored in `data/splits.csv`; patient identity cannot be verified.
 - Training seed 42; only one seed in the reported main experiments.
