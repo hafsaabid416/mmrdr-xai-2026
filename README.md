@@ -18,7 +18,6 @@ Research prototype for five-grade diabetic retinopathy (DR) classification from 
 | `tests/test_core.py` | Basic implementation tests |
 | `docs/DECISIONS.md` | Experiment rationale and sources |
 
-**Not included in the repository ZIP examined:** the MMRDR images, preprocessed image cache, trained `.pt` checkpoints or full output folders. The Google Drive links below are supplied for inspecting the exported outputs; the scripts can regenerate them. Without trained checkpoints, testing a new retinal image requires running training first. Drive folder contents and sharing permissions must be checked by the repository owner.
 
 ## 2. Dataset
 
