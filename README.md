@@ -22,7 +22,7 @@ This README documents the code in this repository. Details of design decisions a
 
 ## 2. Dataset
 
-Source: Tang et al. (2026), MMRDR, *Scientific Data*. Obtain the dataset from the authors' data deposit: <https://doi.org/10.6084/m9.figshare.29423747.v2>. Check the dataset's licence and access conditions. **Do not commit the images to GitHub.**
+Source: Tang et al. (2026), MMRDR, *Scientific Data*. Obtain the dataset from the authors' data deposit: <https://doi.org/10.6084/m9.figshare.29423747.v2>. Check the dataset's licence and access conditions. 
 
 Only the CFP subset is used (11,118 images and seven image-level lesion indicators). After extraction, the data-preparation script expects:
 
