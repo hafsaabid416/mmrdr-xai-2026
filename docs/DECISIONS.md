@@ -116,14 +116,3 @@ The report's justifications are drawn from this register.
 | G2 | Report structured against **TRIPOD+AI** items where applicable | E, B | Reporting standard for clinical prediction models using AI | Collins 2024 | ✅ |
 | G3 | Present as research prototype; no clinical claims | B, E | Brief §6; UK medical-device regulation applies to clinical use | MHRA SaMD/AIaMD programme | ✅ |
 
-## 11. Anticipated challenge (Section 4) — proposed, not demonstrated
-
-| ID | Decision | Driver | Motivation / evidence | Literature | Status |
-|---|---|---|---|---|---|
-| F1 | Challenge: **safe translation from offline performance to real optometric workflows** (dataset shift across stores/devices, human–AI interaction, governance) | E, U | Real deployments of DR AI have failed on image quality and workflow fit despite good offline accuracy | Beede 2020; Kelly 2019 | 💡 |
-| F2 | Strategy: staged evaluation — silent (shadow) mode → supervised pilot with override logging → monitored rollout | E | Recommended staged early clinical evaluation | Vasey 2022 (DECIDE-AI) | 💡 |
-| F3 | Site/device subgroup audit, recalibration per site, drift monitoring | E | Shift degrades calibration and performance | Ruamviboonsuk 2022; Guo 2017 | 💡 |
-| F4 | Clinical safety case and DPIA from the outset | E | NHS clinical risk management standards DCB0129 (manufacturer) / DCB0160 (deployer); UK GDPR DPIA | NHS England DCB0129/DCB0160; ICO | 💡 |
-
----
-
