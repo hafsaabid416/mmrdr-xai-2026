@@ -1,6 +1,6 @@
 # MMRDR-XAI: Explainable diabetic retinopathy grading
 
-Research prototype for five-grade diabetic retinopathy (DR) classification from colour fundus photographs (CFP), comparing conventional classification, ordinal learning, lesion-supervised grading and an editable concept bottleneck. It also evaluates calibration, review flags, image degradation and Grad-CAM explanations. **Research only: not clinically validated and not for patient care.**
+Research prototype for five-grade diabetic retinopathy (DR) classification from colour fundus photographs (CFP), comparing conventional classification, ordinal learning, lesion-supervised grading and an editable concept bottleneck. It also evaluates calibration, review flags, image degradation and Grad-CAM explanations. **This prototype is research only. It is neither clinically validated nor suitable for patient care.**
 
 
 
@@ -21,7 +21,7 @@ Research prototype for five-grade diabetic retinopathy (DR) classification from 
 
 ## 2. Dataset
 
-Source: Tang et al. (2026), MMRDR, *Scientific Data*. Obtain the dataset from the authors' data deposit: <https://doi.org/10.6084/m9.figshare.29423747.v2>. Check the dataset's licence and access conditions. **Do not commit the images to GitHub.**
+Source: Tang et al. (2026), MMRDR, *Scientific Data*. Obtain the dataset from the authors' data deposit: <https://doi.org/10.6084/m9.figshare.29423747.v2>. Check the dataset's licence and access conditions. 
 
 Only the CFP subset is used (11,118 images and seven image-level lesion indicators). After extraction, the data-preparation script expects:
 
@@ -34,11 +34,11 @@ Only the CFP subset is used (11,118 images and seven image-level lesion indicato
 
 `notebooks/mmrdr_eda.ipynb` documents the archive extraction and exploratory analysis. Dataset download and extraction may require substantial space and time in Colab. The model scripts do not download the dataset automatically.
 
-The repository already includes the **frozen analysis split** at `data/splits.csv`. You do **not** need to rerun EDA to use that split. If you wish to regenerate it, run EDA to obtain `cfp_eda.csv` and use `scripts/make_splits.py`; this may take longer than the main preparation step.
+The repository already includes the **frozen analysis split** at `data/splits.csv`. You do **not** need to rerun EDA to use that split. If you wish to regenerate it, run EDA to obtain `cfp_eda.csv` and use `scripts/make_splits.py`. Tthis may take longer than the main preparation step.
 
 ## 3. Environment and installation
 
-The experiments were developed using Google Colab with an NVIDIA T4 GPU and Python 3.12. GPU access is recommended for training; basic tests run on CPU.
+The experiments were developed using Google Colab with an NVIDIA T4 GPU and Python 3.12. GPU access is recommended for training. Basic tests run on CPU.
 
 From the repository root:
 
@@ -101,7 +101,7 @@ python scripts/train.py --config configs/D_bottleneck.yaml \
   --splits data/splits.csv --images cache512 --out outputs/runs/D_bottleneck_none
 ```
 
-The `_none` run names indicate standard preprocessing, which was selected from the validation preprocessing comparison. Run names are chosen by the user; the scripts do not require these exact names. The training script saves `best.pt`, `val_predictions.csv`, `val_metrics.json`, `history.csv` and a training log in the chosen run directory. Best checkpoint selection uses **validation QWK**, not test performance. The shared settings include seed 42, up to 20 epochs, AdamW and a cosine learning-rate schedule. Run `python scripts/train.py --help` for optional overrides and `--resume`.
+The `_none` run names indicate standard preprocessing, which was selected from the validation preprocessing comparison. Run names are chosen by the user and the scripts do not require these exact names. The training script saves `best.pt`, `val_predictions.csv`, `val_metrics.json`, `history.csv` and a training log in the chosen run directory. Best checkpoint selection uses **validation QWK**, not test performance. The shared settings include seed 42, up to 20 epochs, AdamW and a cosine learning-rate schedule. Run `python scripts/train.py --help` for optional overrides and `--resume`.
 
 ## 6. Evaluate an existing checkpoint (no retraining)
 
@@ -113,7 +113,7 @@ python scripts/evaluate.py \
   --splits data/splits.csv --images cache512
 ```
 
-This fits temperature scaling, decision thresholds and conformal thresholds on the **validation** predictions and assesses performance on the held-out **test** images. Outputs are saved under `<run>/eval/`, including `test_metrics.json`, `test_predictions.csv` and evaluation figures. The default bootstrap count is 2,000; run `python scripts/evaluate.py --help` for options.
+This fits temperature scaling, decision thresholds and conformal thresholds on the **validation** predictions and assesses performance on the held-out **test** images. Outputs are saved under `<run>/eval/`, including `test_metrics.json`, `test_predictions.csv` and evaluation figures. The default bootstrap count is 2,000. Run `python scripts/evaluate.py --help` for options.
 
 To check the complete model comparison, repeat the evaluation command with the run directories for A, B and D. Only compare runs that used the documented frozen split.
 
@@ -145,31 +145,32 @@ python scripts/intervention.py \
   --splits data/splits.csv
 ```
 
-These interventions substitute recorded dataset lesion annotations for predicted lesions. They are **not actual clinician edits** and were explored using test results; their effectiveness requires independent confirmation.
+These interventions substitute recorded dataset lesion annotations for predicted lesions. They are **not actual clinician edits** and were explored using test results. Their effectiveness requires independent confirmation.
 
 ## 8. Example outputs, figures and evaluation results
 
-**These are the supporting outputs referenced by the technical report (Deliverable A).** They are hosted separately to keep the GitHub repository focused on code and documentation.
+Representative outputs from the project are included in the [`examples/`](examples/) folder to demonstrate dataset exploration, model evaluation and explainability.
 
-- **[EDA figures and analysis outputs — Google Drive](https://drive.google.com/drive/folders/1skEM_hCVv6GvyY1-4FCRn6BZzvScq2r5?usp=drive_link)** — exploratory plots, dataset distributions, annotation analysis and other outputs from [`notebooks/mmrdr_eda.ipynb`](notebooks/mmrdr_eda.ipynb).
-- **[Experiment runs and outputs — Google Drive](https://drive.google.com/drive/folders/15yfpIAE6DBfVhwe6JDdf_VwlFtatWmWa?usp=drive_link)** — training/evaluation runs, predictions, Grad-CAM explanations, robustness checks and simulated lesion corrections. Output subpaths below are relative to the **runs folder**, not to the GitHub repository.
+| Output | Description |
+|---|---|
+| [Grade Distribution](examples/grade_distribution.png) | Distribution of DR severity grades, highlighting class imbalance (Report Figure 3). |
+| [Lesion Prevalence](examples/lesion_prevalence.png) | Prevalence of annotated retinal lesions across DR grades (Report Figure 4). |
+| [Confusion Matrix](examples/confusion_matrix.png) | Model C's predictions against true DR grades on the held-out test set (Report Figure 6). |
+| [Per-Grade Performance](examples/per_grade_performance.png) | Precision, recall and F1-score across DR severity grades (Report Figure 7). |
+| [Grad-CAM Example](examples/gradcam_example.png) | Representative undergraded Severe DR case with prediction details and visual explanation (Report Figure 8). |
 
-### Where to find each figure from the report
+### Full Experiment Outputs
 
-| Report item | Where to look | Recreate / source |
-|---|---|---|
-| **Figure 1 — Five DR grades** | Report-only explanatory infographic; not a model output | See the PDF report; based on the ICDR scale |
-| **Figure 2 — Sample fundus images** | EDA Drive folder / [`notebooks/mmrdr_eda.ipynb`](notebooks/mmrdr_eda.ipynb) | Sample images from the original MMRDR-CFP dataset; access and redistribution depend on dataset permissions |
-| **Figure 3 — Original grade distributions** | **EDA Drive folder** | Grade counts from the original MMRDR train/test partitions; regenerate through the EDA notebook |
-| **Figure 4 — Lesion prevalence heatmap** | **EDA Drive folder** | Lesion indicators grouped by DR grade; regenerate through the EDA notebook |
-| **Figure 5 — Architecture comparison** | Report-only explanatory diagram; not a script-generated metric plot | Model definitions in `src/mmrdr/models.py` and configuration files in `configs/` |
-| **Figure 6 — Model C confusion matrix** | **Runs Drive:** `C_multitask_none/eval/confusion_matrix.png` | `scripts/evaluate.py` |
-| **Figure 7 — Model C per-grade precision, recall and F1** | **Runs Drive:** check Model C evaluation outputs, particularly `C_multitask_none/eval/test_metrics.json` | Per-class metrics via `scripts/evaluate.py`; the report's bar-chart PNG is not confirmed as a standalone file in the verification archive |
-| **Figure 8 — Severe case misgraded Mild; prediction and explanation** | **Runs Drive:** `C_multitask_none/explain/panel_missed_sight_threatening.png` | `scripts/explain.py` |
-| **Figure 9 — Grad-CAM example gallery** | **Runs Drive:** `C_multitask_none/explain/gallery.png` | `scripts/explain.py` |
-| **Table 2 — Model comparison** | **Runs Drive:** `test_summary.csv`; each `*/eval/test_metrics.json` | `scripts/evaluate.py` run for Models A–D |
-| **Table 3 — Reliability checks** | **Runs Drive:** `C_multitask_none/eval/test_metrics.json`, `C_multitask_none/robustness/robustness.json`, `C_multitask_none/robustness/robustness.png` | `scripts/evaluate.py` and `scripts/robustness.py` |
-| **Table 4 — Simulated lesion corrections** | **Runs Drive:** `D_bottleneck_none/intervention/intervention.json`, `intervention.csv`, `intervention_curve.png` | `scripts/intervention.py` |
+The figures above are selected examples. Further visualisations, predictions, evaluation results and experiment outputs are available in the following Google Drive folders:
+
+- **[EDA Outputs](https://drive.google.com/drive/folders/1skEM_hCVv6GvyY1-4FCRn6BZzvScq2r5?usp=drive_link)** — Dataset exploration, DR grade distributions, lesion analysis and image-quality visualisations.
+- **[Experiment Runs and Results](https://drive.google.com/drive/folders/15yfpIAE6DBfVhwe6JDdf_VwlFtatWmWa?usp=drive_link)** — Model evaluation metrics, confusion matrices, representative predictions, Grad-CAM explanations, calibration, robustness tests and lesion-intervention results.
+
+The repository also contains the scripts and notebooks used to generate these outputs. See the installation and execution instructions above for reproduction details.
+
+
+
+
 
 Additional representative outputs available in the run structure include:
 
