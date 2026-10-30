@@ -1,111 +1,175 @@
-# MMRDR-XAI: clinically explainable diabetic retinopathy grading
+# MMRDR-XAI: Explainable diabetic retinopathy grading
 
-A **research prototype** that grades colour fundus photographs (CFP) into the five ICDR severity levels
-(0 No DR · 1 Mild NPDR · 2 Moderate NPDR · 3 Severe NPDR · 4 PDR) and reports calibrated uncertainty,
-lesion-level findings and visual explanations for clinician review. It is **not** a clinically validated
-diagnostic tool.
+Research prototype for five-grade diabetic retinopathy (DR) classification from colour fundus photographs (CFP), comparing conventional classification, ordinal learning, lesion-supervised grading and an editable concept bottleneck. It also evaluates calibration, review flags, image degradation and Grad-CAM explanations. **Research only: not clinically validated and not for patient care.**
 
-Every design choice is recorded with its evidence and literature in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+This README documents the code in this repository. Details of design decisions and references are in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 
-## Repository layout
+## 1. What is included
 
+| Location | Contents |
+|---|---|
+| `configs/` | YAML settings for the shared training configuration and Models A–D |
+| `src/mmrdr/` | Model, data, preprocessing, calibration, metrics and explanation code |
+| `scripts/` | Data preparation, splitting, training, evaluation, robustness, explanation and intervention entry points |
+| `notebooks/mmrdr_eda.ipynb` | Data exploration and duplicate analysis |
+| `notebooks/mmrdr_colab_runner.ipynb` | Colab workflow using the scripts |
+| `data/splits.csv` | Frozen split identifiers and labels; **no retinal images** |
+| `data/excluded_images.csv`, `data/splits_summary.json` | Exclusions and split summary |
+| `tests/test_core.py` | Basic implementation tests |
+| `docs/DECISIONS.md` | Experiment rationale and sources |
+
+**Not included in this ZIP:** the licensed MMRDR images, preprocessed image cache, trained `.pt` checkpoints, full run histories or explanation plots. Code for generating these outputs is included. Without trained checkpoints, testing a new retinal image requires running training first. If distributing checkpoints separately, document their download location and associated configuration before claiming a no-training test path.
+
+## 2. Dataset
+
+Source: Tang et al. (2026), MMRDR, *Scientific Data*. Obtain the dataset from the authors' data deposit: <https://doi.org/10.6084/m9.figshare.29423747.v2>. Check the dataset's licence and access conditions. **Do not commit the images to GitHub.**
+
+Only the CFP subset is used (11,118 images and seven image-level lesion indicators). After extraction, the data-preparation script expects:
+
+```text
+<DATA_ROOT>/MMRDR-CFP/
+  FP.csv
+  img/
+    ... original CFP images ...
 ```
-configs/            experiment configs (YAML, inherit from base.yaml)
-data/splits.csv     frozen leakage-safe split (committed; contains labels only, no images)
-docs/               decision register, model card
-notebooks/
-  01_data_exploration.ipynb   EDA → preprocessing decisions
-  00_colab_runner.ipynb       thin Colab wrapper around the scripts
-scripts/            command-line entry points (make_splits, prepare_images, train, …)
-src/mmrdr/          package: preprocessing, data, models, losses, metrics, …
-tests/              unit tests (preprocessing, CORN maths, metrics, split leakage)
-```
 
-## Data
+`notebooks/mmrdr_eda.ipynb` documents the archive extraction and exploratory analysis. Dataset download and extraction may require substantial space and time in Colab. The model scripts do not download the dataset automatically.
 
-MMRDR (Tang et al., *Scientific Data* 2026) is available from figshare:
-<https://doi.org/10.6084/m9.figshare.29423747.v2>. **The dataset is not redistributed here.**
+The repository already includes the **frozen analysis split** at `data/splits.csv`. You do **not** need to rerun EDA to use that split. If you wish to regenerate it, run EDA to obtain `cfp_eda.csv` and use `scripts/make_splits.py`; this may take longer than the main preparation step.
 
-1. Download all nine parts `MMRDR.zip.001`–`.009` (≈17.8 GB).
-2. The split archive's central directory is unreadable by standard tools after joining; extract it with the
-   streaming extractor in `notebooks/01_data_exploration.ipynb` (or any tool that reads local headers).
-   Only `MMRDR-CFP/` (11,118 images + `FP.csv`) is used.
+## 3. Environment and installation
 
-## Setup
+The experiments were developed using Google Colab with an NVIDIA T4 GPU and Python 3.12. GPU access is recommended for training; basic tests run on CPU.
+
+From the repository root:
 
 ```bash
-pip install -r requirements.txt
-python -m pytest -q tests          # 10 fast tests, CPU only
+python -m pip install -r requirements.txt
+python -m pytest -q tests/
 ```
 
-## Reproducing the experiments
+`requirements.txt` specifies minimum package versions, **not a fully pinned environment**. Reproduction on a different PyTorch/CUDA version may yield some variation. Main settings, including `seed: 42`, batch size, optimisers and augmentation settings, are defined in `configs/base.yaml`.
+
+## 4. Prepare image cache (no model training)
+
+Run this from the repository root, replacing `/path/to/MMRDR-CFP` with the actual extracted CFP directory:
 
 ```bash
-# 1. leakage-safe split (already committed as data/splits.csv)
-python scripts/make_splits.py --eda <eda_dir>/cfp_eda.csv --out data/splits.csv
-
-# 2. preprocess once to a 512 px cache (pad to square, black background, resize)
-python scripts/prepare_images.py --src <path>/MMRDR-CFP --out cache512
-
-# 3. illumination ablation on the baseline (select by validation QWK)
-python scripts/train.py --config configs/A_baseline.yaml --splits data/splits.csv --images cache512 --out outputs/runs/A_baseline
-python scripts/train.py --config configs/A_graham.yaml   --splits data/splits.csv --images cache512 --out outputs/runs/A_graham
-python scripts/train.py --config configs/A_clahe.yaml    --splits data/splits.csv --images cache512 --out outputs/runs/A_clahe
-
-# 4. model ladder with the selected normaliser (one change at a time)
-python scripts/train.py --config configs/B_ordinal.yaml    ... data.normaliser=<winner>
-python scripts/train.py --config configs/C_multitask.yaml  ... data.normaliser=<winner>
-python scripts/train.py --config configs/D_bottleneck.yaml ... data.normaliser=<winner>
+python scripts/prepare_images.py \
+  --src /path/to/MMRDR-CFP \
+  --out cache512 \
+  --size 512
 ```
 
-Any config value can be overridden from the command line (`train.epochs=10`). Runs resume after a
-disconnect with `--resume`. Seeds are fixed (`seed: 42`); library versions and GPU are logged in `train.log`.
+This creates the padded, resized 512×512 image cache used by training and evaluation. The original data is not modified. The cache directory is ignored by Git.
 
-| Config | Change | Decision |
-|---|---|---|
-| `A_baseline` | ResNet-50 (ImageNet), softmax, class-balanced CE | A1, T1 |
-| `A_graham` / `A_clahe` | + illumination normalisation | P3 |
-| `B_ordinal` | ordinal CORN head | A3 |
-| `C_multitask` | + 7-lesion auxiliary head | A4 |
-| `D_bottleneck` | grade predicted only from lesion probabilities | A5 |
-
-**Experimental protocol.** The official test split is kept intact; training images that duplicate a test
-image are removed (exact MD5 or retinal-vessel similarity ≥ 0.98); validation is a stratified, group-aware
-1/7 of the remaining training data. Model selection, temperature scaling, conformal calibration and
-operating thresholds use the validation set only. The test set is evaluated once.
-
-## External resources
-
-- ImageNet-pretrained ResNet-50 / ConvNeXt-T weights from `torchvision`.
-- CORN ordinal loss implemented from Shi, Cao & Raschka (2023).
-- All other code written for this project.
-
-## Evaluation, reliability and explanations
-
-Run after training, per model (the test set is scored once; everything fitted uses validation):
+Optional split regeneration (not necessary when using the committed split):
 
 ```bash
-python scripts/evaluate.py   --run outputs/runs/C_multitask_none --splits data/splits.csv --images cache512
-python scripts/robustness.py --run outputs/runs/C_multitask_none --splits data/splits.csv --images cache512
-python scripts/explain.py    --run outputs/runs/C_multitask_none --splits data/splits.csv --images cache512
+python scripts/make_splits.py \
+  --eda /path/to/cfp_eda.csv \
+  --out data/splits_regenerated.csv \
+  --seed 42
 ```
 
-| Script | Fitted on validation | Reported on test |
-|---|---|---|
-| `evaluate.py` | temperature (calibration), decision rule (argmax vs median), referable / sight-threatening thresholds for ≥ 90 % sensitivity, class-conditional conformal thresholds (α = 0.1) | accuracy, macro-F1, QWK with bootstrap 95 % CIs; per-class metrics; confusion matrix; under-grading and distant-error rates; sensitivity/specificity at the operating points; ECE before/after calibration; conformal coverage and set size; review-flag performance; selective-prediction curve; lesion AUROC |
-| `robustness.py` | — (re-uses the above unchanged) | the same metrics under blur, under-exposure and JPEG compression, plus the **blur-shortcut test**: do degraded healthy eyes get referred? |
-| `explain.py` | — | Grad-CAM for the severity estimate and for individual lesions on representative correct, erroneous and flagged cases; clinician-facing summary panels; saliency sanity check (model randomisation) |
+The experiment split preserves the published test partition while excluding identified duplicate or conflicting training images. Patient-level independence cannot be guaranteed because patient identifiers are unavailable.
 
-Outputs are written to `<run>/eval/`, `<run>/robustness/` and `<run>/explain/`.
+## 5. Train the models
 
-## Validation results (model selection)
+From the repository root, using `cache512` and the included `data/splits.csv`:
 
-| Run | Val QWK | Macro-F1 | Under-grading | Referable sens. (default rule) |
-|---|---|---|---|---|
-| A baseline (softmax) | 0.893 | 0.719 | 11.5 % | 0.749 |
-| A + Graham / + CLAHE | 0.894 / 0.889 | 0.692 / 0.701 | 12.1 % / 10.9 % | 0.816 / 0.808 |
-| B ordinal | 0.895 | 0.676 | 8.2 % | 0.860 |
-| **C ordinal + lesions (main)** | **0.910** | 0.706 | 9.6 % | **0.878** |
-| D concept bottleneck | 0.899 | 0.680 | 12.1 % | 0.838 |
+```bash
+# Model A: standard preprocessing
+python scripts/train.py --config configs/A_baseline.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/A_baseline
 
-Test-set results are produced by `evaluate.py` and summarised in the report.
+# Model A preprocessing comparisons
+python scripts/train.py --config configs/A_graham.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/A_graham
+python scripts/train.py --config configs/A_clahe.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/A_clahe
+
+# Model B: ordinal CORN
+python scripts/train.py --config configs/B_ordinal.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/B_ordinal_none
+
+# Model C: ordinal grade and auxiliary lesion predictions
+python scripts/train.py --config configs/C_multitask.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/C_multitask_none
+
+# Model D: lesion-to-grade concept bottleneck
+python scripts/train.py --config configs/D_bottleneck.yaml \
+  --splits data/splits.csv --images cache512 --out outputs/runs/D_bottleneck_none
+```
+
+The `_none` run names indicate standard preprocessing, which was selected from the validation preprocessing comparison. Run names are chosen by the user; the scripts do not require these exact names. The training script saves `best.pt`, `val_predictions.csv`, `val_metrics.json`, `history.csv` and a training log in the chosen run directory. Best checkpoint selection uses **validation QWK**, not test performance. The shared settings include seed 42, up to 20 epochs, AdamW and a cosine learning-rate schedule. Run `python scripts/train.py --help` for optional overrides and `--resume`.
+
+## 6. Evaluate an existing checkpoint (no retraining)
+
+**If `outputs/runs/C_multitask_none/best.pt` and the other training-run files are already available**, skip Section 5 and run:
+
+```bash
+python scripts/evaluate.py \
+  --run outputs/runs/C_multitask_none \
+  --splits data/splits.csv --images cache512
+```
+
+This fits temperature scaling, decision thresholds and conformal thresholds on the **validation** predictions and assesses performance on the held-out **test** images. Outputs are saved under `<run>/eval/`, including `test_metrics.json`, `test_predictions.csv` and evaluation figures. The default bootstrap count is 2,000; run `python scripts/evaluate.py --help` for options.
+
+To check the complete model comparison, repeat the evaluation command with the run directories for A, B and D. Only compare runs that used the documented frozen split.
+
+## 7. Explainability, robustness and lesion corrections
+
+After running `evaluate.py` for Model C:
+
+```bash
+python scripts/explain.py \
+  --run outputs/runs/C_multitask_none \
+  --splits data/splits.csv --images cache512
+
+python scripts/robustness.py \
+  --run outputs/runs/C_multitask_none \
+  --splits data/splits.csv --images cache512
+```
+
+The explanation script generates representative Grad-CAM panels and a model-randomisation sanity check under `<run>/explain/`. The robustness script tests blur, darkening and JPEG compression under `<run>/robustness/`. Explanations reflect model influence, **not verified lesion localisation**.
+
+To reproduce the **exploratory** Model D lesion-correction experiment, first evaluate Model D, then run:
+
+```bash
+python scripts/evaluate.py \
+  --run outputs/runs/D_bottleneck_none \
+  --splits data/splits.csv --images cache512
+
+python scripts/intervention.py \
+  --run outputs/runs/D_bottleneck_none \
+  --splits data/splits.csv
+```
+
+These interventions substitute recorded dataset lesion annotations for predicted lesions. They are **not actual clinician edits** and were explored using test results; their effectiveness requires independent confirmation.
+
+## 8. Results to verify
+
+Reported held-out performance (2,225 test images):
+
+| Model | QWK | Accuracy | Macro-F1 |
+|---|---:|---:|---:|
+| A | 0.873 | 0.782 | 0.673 |
+| B | 0.881 | 0.760 | 0.634 |
+| C | 0.883 | 0.812 | 0.685 |
+| D | 0.879 | 0.791 | 0.643 |
+
+Model C: Grade ≥2 sensitivity 0.877, Grade ≥3 sensitivity 0.953; test calibration error 0.137 before and 0.022 after temperature scaling. Model D exploratory correction of the three most uncertain lesion predictions: QWK 0.879 to 0.956, Grade ≥2 threshold misses 67 to 14, and Grade ≥3 threshold misses 23 to 61. See the technical report for confidence intervals, grading errors, explanations and limitations.
+
+**Outputs are not bundled in the uploaded GitHub ZIP.** Regenerate them with Sections 5–7 or supply a separately authorised verification archive. Do not claim the results can be reproduced without training unless the corresponding checkpoints have been provided.
+
+## 9. Reproducibility and limitations
+
+- Frozen image-level train/validation/test split, stored in `data/splits.csv`; patient identity cannot be verified.
+- Training seed 42; only one seed in the reported main experiments.
+- Dataset contains no demographic or device metadata for subgroup evaluation.
+- Calibration and threshold choices are fitted using validation data; review-flag refinements and lesion-correction analyses on test data are exploratory.
+- Synthetic image degradation does not replace validation on real clinical devices.
+- The work is a research prototype, **not a validated medical device**.
+
+For the experiment rationale, consult [`docs/DECISIONS.md`](docs/DECISIONS.md). For users of the Colab workflow, see [`notebooks/mmrdr_colab_runner.ipynb`](notebooks/mmrdr_colab_runner.ipynb).
