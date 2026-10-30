@@ -1,6 +1,4 @@
-#calibration and conformal prediction 
-
-#everything here is fitted on the validation set and only applied to the test set.
+#calibration and conformal prediction #everything here is fitted on the validation set and only applied to the test set.
 
 from __future__ import annotations
 
