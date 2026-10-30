@@ -1,4 +1,4 @@
-# Tested on Google Colab (T4, Python 3.12). Exact versions are logged in each run's train.log.
+# Tested on Google Colab (T4, Python 3.12)
 torch>=2.2
 torchvision>=0.17
 numpy>=1.26

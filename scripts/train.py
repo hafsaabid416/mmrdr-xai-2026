@@ -1,6 +1,6 @@
 """Train one experiment from a YAML config.
 
-The best checkpoint is chosen on validation QWK; this script never reads the test split.
+The best checkpoint is chosen on validation QWK. this script never reads the test split.
 
 Usage:
     python scripts/train.py --config configs/C_multitask.yaml --splits data/splits.csv \
