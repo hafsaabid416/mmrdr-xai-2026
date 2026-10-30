@@ -2,7 +2,7 @@
 
 Research prototype for five-grade diabetic retinopathy (DR) classification from colour fundus photographs (CFP), comparing conventional classification, ordinal learning, lesion-supervised grading and an editable concept bottleneck. It also evaluates calibration, review flags, image degradation and Grad-CAM explanations. **Research only: not clinically validated and not for patient care.**
 
-This README documents the code in this repository. Details of design decisions and references are in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+
 
 ## 1. What is included
 
