@@ -197,20 +197,26 @@ Additional representative outputs available in the run structure include:
 To **generate these files yourself**, prepare the MMRDR-CFP dataset, train the relevant model with Section 5, and run the evaluation/explanation/robustness/intervention commands in Sections 6–7. The Drive folders are for viewing the supplied outputs; reproducibility still depends on the scripts, configs and dataset access.
 
 
-## 9. Results to verify
 
-Reported held-out performance (2,225 test images):
+## 9. Experimental Results
+
+The four models were evaluated on a held-out test set of 2,225 retinal images.
 
 | Model | QWK | Accuracy | Macro-F1 |
 |---|---:|---:|---:|
-| A | 0.873 | 0.782 | 0.673 |
-| B | 0.881 | 0.760 | 0.634 |
-| C | 0.883 | 0.812 | 0.685 |
-| D | 0.879 | 0.791 | 0.643 |
+| A — Softmax baseline | 0.873 | 0.782 | 0.673 |
+| B — Ordinal (CORN) | 0.881 | 0.760 | 0.634 |
+| C — Ordinal + lesion prediction | 0.883 | 0.812 | 0.685 |
+| D — Concept bottleneck | 0.879 | 0.791 | 0.643 |
 
-Model C: Grade ≥2 sensitivity 0.877, Grade ≥3 sensitivity 0.953; test calibration error 0.137 before and 0.022 after temperature scaling. Model D exploratory correction of the three most uncertain lesion predictions: QWK 0.879 to 0.956, Grade ≥2 threshold misses 67 to 14, and Grade ≥3 threshold misses 23 to 61. See the technical report for confidence intervals, grading errors, explanations and limitations.
+Model C achieved the highest overall accuracy, macro-F1 and QWK. Its Grade ≥2 referral sensitivity was 0.877, while Grade ≥3 sensitivity was 0.953. Temperature scaling reduced expected calibration error from 0.137 to 0.022.
 
-**Outputs are linked above via Google Drive rather than bundled in the examined GitHub ZIP.** Regenerate them with Sections 5–7 if needed. Do not claim the results can be reproduced without training unless the corresponding checkpoints have been provided.
+An exploratory intervention on Model D, replacing its three most uncertain lesion predictions with dataset annotations, improved QWK from 0.879 to 0.956 and reduced missed Grade ≥2 referrals from 67 to 14. However, missed Grade ≥3 urgent cases increased from 23 to 61.
+
+These findings highlight the importance of assessing clinically relevant errors alongside overall grading performance.
+
+Full evaluation outputs, visualisations and experimental records are available through the Google Drive links in Section 8. 
+
 
 ## 10. Reproducibility and limitations
 
